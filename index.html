@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>每日日程表 | 月历</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./app.js" charset="utf-8" defer></script>
+  </head>
+  <body data-page="calendar">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="返回月历">
+        <span class="brand-mark">日</span>
+        <span>每日日程表</span>
+      </a>
+      <div class="user-menu" data-user-menu hidden>
+        <span data-user-email></span>
+        <button class="button ghost small" type="button" data-sign-out>退出</button>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="notice setup-notice" data-config-notice hidden>
+        <strong>需要配置 Supabase 后才能云端保存。</strong>
+        <p data-config-reason></p>
+        <p>在 <code>app.js</code> 顶部填入 <code>SUPABASE_URL</code> 和 <code>SUPABASE_ANON_KEY</code>，并在 Supabase SQL Editor 运行 <code>supabase-schema.sql</code>。</p>
+      </section>
+
+      <section class="auth-card" data-auth-gate hidden>
+        <div>
+          <p class="eyebrow">云端同步</p>
+          <h1>登录后查看你的每日日程</h1>
+          <p class="muted">使用邮箱和密码登录或注册，日程和每日感想会保存到 Supabase。</p>
+        </div>
+        <form class="auth-form" data-auth-form>
+          <label>
+            <span>邮箱</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <label>
+            <span>密码</span>
+            <input type="password" name="password" autocomplete="current-password" minlength="6" required>
+          </label>
+          <div class="auth-actions">
+            <button class="button primary" type="submit" data-auth-action="signin">登录</button>
+            <button class="button secondary" type="button" data-auth-action="signup">注册</button>
+          </div>
+          <p class="form-message" data-auth-message aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="calendar-page" data-app-content>
+        <div class="page-title-row">
+          <div>
+            <p class="eyebrow">Monthly Plan</p>
+            <h1>月历</h1>
+            <p class="muted">点击某一天进入当天日程表。</p>
+          </div>
+          <div class="toolbar" aria-label="月份切换">
+            <button class="button ghost" type="button" data-prev-month>上一月</button>
+            <button class="button secondary" type="button" data-today-month>今天</button>
+            <button class="button ghost" type="button" data-next-month>下一月</button>
+          </div>
+        </div>
+
+        <section class="panel month-panel calendar-on-image" aria-labelledby="month-title">
+          <img class="calendar-art" src="./assets/home-hero.png" alt="" aria-hidden="true">
+          <div class="month-heading">
+            <h2 id="month-title" data-month-title>加载中</h2>
+            <p class="muted" data-month-summary>准备读取日程。</p>
+          </div>
+          <div class="calendar-grid" data-calendar-grid aria-label="月历日期"></div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

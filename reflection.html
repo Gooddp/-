@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>每日日程表 | 每日感想</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./app.js" charset="utf-8" defer></script>
+  </head>
+  <body data-page="reflection">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="返回月历">
+        <span class="brand-mark">日</span>
+        <span>每日日程表</span>
+      </a>
+      <div class="user-menu" data-user-menu hidden>
+        <span data-user-email></span>
+        <button class="button ghost small" type="button" data-sign-out>退出</button>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="notice setup-notice" data-config-notice hidden>
+        <strong>需要配置 Supabase 后才能云端保存。</strong>
+        <p data-config-reason></p>
+        <p>在 <code>app.js</code> 顶部填入 <code>SUPABASE_URL</code> 和 <code>SUPABASE_ANON_KEY</code>，并在 Supabase SQL Editor 运行 <code>supabase-schema.sql</code>。</p>
+      </section>
+
+      <section class="auth-card" data-auth-gate hidden>
+        <div>
+          <p class="eyebrow">Daily Reflection</p>
+          <h1>登录后写每日感想</h1>
+          <p class="muted">每天保存一篇，方便回看自己的状态。</p>
+        </div>
+        <form class="auth-form" data-auth-form>
+          <label>
+            <span>邮箱</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <label>
+            <span>密码</span>
+            <input type="password" name="password" autocomplete="current-password" minlength="6" required>
+          </label>
+          <div class="auth-actions">
+            <button class="button primary" type="submit" data-auth-action="signin">登录</button>
+            <button class="button secondary" type="button" data-auth-action="signup">注册</button>
+          </div>
+          <p class="form-message" data-auth-message aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section data-app-content>
+        <div class="page-title-row">
+          <div>
+            <a class="text-link" data-reflection-back-link href="./index.html">返回当天日程</a>
+            <h1 data-reflection-title>每日感想</h1>
+            <p class="muted">写下今天的心情、收获或想留给自己的话。</p>
+          </div>
+        </div>
+
+        <form class="panel reflection-form" data-reflection-form>
+          <label>
+            <span>今天的感想</span>
+            <textarea name="content" rows="12" maxlength="3000" placeholder="今天发生了什么？有什么想感谢、记录或改进的地方？"></textarea>
+          </label>
+          <div class="form-actions">
+            <button class="button primary" type="submit" data-save-reflection>保存感想</button>
+            <a class="button ghost" data-reflection-cancel-link href="./index.html">取消</a>
+          </div>
+          <p class="form-message" data-reflection-message aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

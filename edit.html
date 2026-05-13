@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>每日日程表 | 编写日程</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./app.js" charset="utf-8" defer></script>
+  </head>
+  <body data-page="edit">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="返回月历">
+        <span class="brand-mark">日</span>
+        <span>每日日程表</span>
+      </a>
+      <div class="user-menu" data-user-menu hidden>
+        <span data-user-email></span>
+        <button class="button ghost small" type="button" data-sign-out>退出</button>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="notice setup-notice" data-config-notice hidden>
+        <strong>需要配置 Supabase 后才能云端保存。</strong>
+        <p data-config-reason></p>
+        <p>在 <code>app.js</code> 顶部填入 <code>SUPABASE_URL</code> 和 <code>SUPABASE_ANON_KEY</code>，并在 Supabase SQL Editor 运行 <code>supabase-schema.sql</code>。</p>
+      </section>
+
+      <section class="auth-card" data-auth-gate hidden>
+        <div>
+          <p class="eyebrow">Edit Schedule</p>
+          <h1>登录后编写日程</h1>
+          <p class="muted">保存后会同步到云端。</p>
+        </div>
+        <form class="auth-form" data-auth-form>
+          <label>
+            <span>邮箱</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <label>
+            <span>密码</span>
+            <input type="password" name="password" autocomplete="current-password" minlength="6" required>
+          </label>
+          <div class="auth-actions">
+            <button class="button primary" type="submit" data-auth-action="signin">登录</button>
+            <button class="button secondary" type="button" data-auth-action="signup">注册</button>
+          </div>
+          <p class="form-message" data-auth-message aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section data-app-content>
+        <div class="page-title-row">
+          <div>
+            <a class="text-link" data-edit-back-link href="./index.html">返回</a>
+            <h1 data-edit-title>新增日程</h1>
+            <p class="muted" data-edit-subtitle>把当天需要完成的事写下来。</p>
+          </div>
+        </div>
+
+        <form class="panel edit-form" data-schedule-form>
+          <label>
+            <span>标题</span>
+            <input type="text" name="title" maxlength="80" required placeholder="例如：完成英语阅读">
+          </label>
+
+          <div class="form-grid">
+            <label>
+              <span>日期</span>
+              <input type="date" name="date" required>
+            </label>
+            <label>
+              <span>分类</span>
+              <select name="category">
+                <option value="学习">学习</option>
+                <option value="工作">工作</option>
+                <option value="生活">生活</option>
+                <option value="其他">其他</option>
+              </select>
+            </label>
+            <label>
+              <span>开始时间</span>
+              <input type="time" name="start_time">
+            </label>
+            <label>
+              <span>结束时间</span>
+              <input type="time" name="end_time">
+            </label>
+            <label>
+              <span>状态</span>
+              <select name="status">
+                <option value="todo">待办</option>
+                <option value="done">已完成</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            <span>备注</span>
+            <textarea name="notes" rows="6" maxlength="1000" placeholder="补充地点、材料、想法或提醒。"></textarea>
+          </label>
+
+          <div class="form-actions">
+            <button class="button primary" type="submit" data-save-schedule>保存</button>
+            <a class="button ghost" data-cancel-link href="./index.html">取消</a>
+          </div>
+          <p class="form-message" data-edit-message aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
