@@ -20,6 +20,7 @@
   let currentSession = null;
   let authListenerReady = false;
   let activeMonth = null;
+  let calendarRenderId = 0;
 
   document.addEventListener("DOMContentLoaded", initApp);
 
@@ -70,7 +71,8 @@
   function bindAuthListener() {
     if (authListenerReady || !supabaseClient) return;
     authListenerReady = true;
-    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+    supabaseClient.auth.onAuthStateChange(async (event, session) => {
+      if (event === "INITIAL_SESSION") return;
       currentSession = session;
       updateAuthGate();
       await runCurrentPage();
@@ -189,23 +191,20 @@
     const summary = document.querySelector("[data-month-summary]");
     if (!grid || !title || !summary) return;
 
-    title.textContent = `${activeMonth.getFullYear()}年${activeMonth.getMonth() + 1}月`;
-    grid.innerHTML = "";
-    WEEKDAYS.forEach((day) => {
-      const weekday = document.createElement("div");
-      weekday.className = "weekday";
-      weekday.textContent = day;
-      grid.appendChild(weekday);
-    });
+    const renderId = ++calendarRenderId;
+    const monthToRender = new Date(activeMonth);
+    title.textContent = `${monthToRender.getFullYear()}年${monthToRender.getMonth() + 1}月`;
 
     let counts = new Map();
     if (canUseCloud()) {
       summary.textContent = "正在读取云端日程...";
       try {
-        counts = await fetchMonthCounts(activeMonth);
+        counts = await fetchMonthCounts(monthToRender);
+        if (renderId !== calendarRenderId) return;
         const total = Array.from(counts.values()).reduce((sum, count) => sum + count, 0);
         summary.textContent = total ? `本月共有 ${total} 项日程。` : "这个月还没有日程。";
       } catch (error) {
+        if (renderId !== calendarRenderId) return;
         summary.textContent = "读取日程失败，请稍后重试。";
         console.error(error);
       }
@@ -213,14 +212,24 @@
       summary.textContent = "预览模式：配置 Supabase 并登录后显示云端日程数量。";
     }
 
-    const first = startOfMonth(activeMonth);
+    if (renderId !== calendarRenderId) return;
+
+    const fragment = document.createDocumentFragment();
+    WEEKDAYS.forEach((day) => {
+      const weekday = document.createElement("div");
+      weekday.className = "weekday";
+      weekday.textContent = day;
+      fragment.appendChild(weekday);
+    });
+
+    const first = startOfMonth(monthToRender);
     const daysInMonth = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
     const leadingBlanks = (first.getDay() + 6) % 7;
 
     for (let i = 0; i < leadingBlanks; i += 1) {
       const blank = document.createElement("div");
       blank.className = "blank-cell";
-      grid.appendChild(blank);
+      fragment.appendChild(blank);
     }
 
     for (let day = 1; day <= daysInMonth; day += 1) {
@@ -237,8 +246,10 @@
           <span>${count ? `${count}项` : " "}</span>
         </span>
       `;
-      grid.appendChild(cell);
+      fragment.appendChild(cell);
     }
+
+    grid.replaceChildren(fragment);
   }
 
   async function fetchMonthCounts(monthDate) {
