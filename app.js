@@ -1,5 +1,5 @@
 (function () {
-  const SUPABASE_URL = "wxxexialzfgywrtptwiy";
+  const SUPABASE_URL = "https://wxxexialzfgywrtptwiy.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_IegYQawFaD-toJTSfhAOeA_OENDkoKU";
 
   const CATEGORY_CLASSES = {
